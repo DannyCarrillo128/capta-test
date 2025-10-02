@@ -7,27 +7,15 @@ import type { DateParams } from '../interfaces/DateParams';
 export const getBusinessDays = async (req: Request<{}, {}, {}, DateParams>, res: Response): Promise<void> => {
 
   try {
-    const daysParam: string = req.query.days ? req.query.days : '0';
-    const hoursParam: string = req.query.hours ? req.query.hours : '0';
-    
+    const days: number = parseInt(req.query.days ?? '0');
+    const hours: number = parseInt(req.query.hours ?? '0');
+
     let date: string;
 
     if (!req.query.date) {
       date = convertToISOFormat(new Date());
     } else {
       date = convertToISOFormat(new Date(req.query.date));
-    }
-
-    const days: number = parseInt(daysParam);
-    const hours: number = parseInt(hoursParam);
-
-    if (isNaN(days) || isNaN(hours)) {
-      res.status(400).json({
-        error: 'InvalidParameters',
-        message: `Parameters 'days' and 'hours' must be positive integers.`
-      });
-
-      return;
     }
     
     const totalHours: number = (days * 8) + hours;
